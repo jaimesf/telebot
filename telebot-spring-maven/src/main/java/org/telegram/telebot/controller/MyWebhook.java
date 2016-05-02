@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.telegram.telebot.model.Update;
 
 @Controller
-@RequestMapping("/telebot")
 public class MyWebhook {
 
 	@RequestMapping(value = "/webhook", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -18,6 +17,15 @@ public class MyWebhook {
 	public void myWebhook(@RequestBody Update update) {
 		
 
+	}
+	
+	/**
+	 * From this JSP you can register webhooks on telegram
+	 * @return
+	 */
+	@RequestMapping(value = "/registerbot", method = RequestMethod.GET)
+	public String registerBot() {
+		return "register";
 	}
 	
 }

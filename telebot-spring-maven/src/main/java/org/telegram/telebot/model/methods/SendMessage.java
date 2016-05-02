@@ -11,6 +11,7 @@ public class SendMessage implements Serializable {
 	 */
 	private static final long serialVersionUID = 1895526091436126522L;
 
+	// TODO: See how to do with String and Integer
 	private Integer chat_id;
 	private String text;
 	private String parse_mode;

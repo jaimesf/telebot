@@ -11,7 +11,7 @@ public class UpdatesResult extends MethodResult implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -632910807442518378L;
-	
+
 	private List<Update> result;
 
 	public List<Update> getResult() {

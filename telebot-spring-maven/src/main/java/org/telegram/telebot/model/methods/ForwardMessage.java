@@ -1,4 +1,4 @@
-package org.telegram.telebot.model;
+package org.telegram.telebot.model.methods;
 
 import java.io.Serializable;
 
@@ -9,7 +9,9 @@ public class ForwardMessage implements Serializable {
 	 */
 	private static final long serialVersionUID = 1986163559343316638L;
 
+	// TODO: See how to do with String and Integer
 	private Integer chat_id;
+	// TODO: See how to do with String and Integer
 	private Integer from_chat_id;
 	private Boolean disable_notification;
 	private Integer message_id;
