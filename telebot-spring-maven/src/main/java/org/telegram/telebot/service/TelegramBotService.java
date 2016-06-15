@@ -2,8 +2,8 @@ package org.telegram.telebot.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
-import org.telegram.telebot.json.RequestJson;
 import org.telegram.telebot.model.File;
 import org.telegram.telebot.model.Message;
 import org.telegram.telebot.model.Update;
@@ -39,8 +39,11 @@ import org.telegram.telebot.model.methods.results.MethodResult;
 import org.telegram.telebot.model.methods.results.UpdatesResult;
 import org.telegram.telebot.model.methods.results.UserProfilePhotosResult;
 import org.telegram.telebot.model.methods.results.UserResult;
+import org.telegram.telebot.service.exceptions.FailConvertJsonException;
 import org.telegram.telebot.service.exceptions.FailResponseMethodException;
 import org.telegram.telebot.utils.UtilsJson;
+
+
 
 public abstract class TelegramBotService {
 
@@ -65,8 +68,15 @@ public abstract class TelegramBotService {
 	}
 	public Boolean setWebhook(SetWebhook webhook) throws FailResponseMethodException {
 
-		// TODO: See how send files
-		return false;
+		Boolean result = null;
+		if(webhook.getCertificate()!=null){
+			Map<String, Object> mapParameters = UtilsJson.getKeyValuePropertiesFromObject(webhook);
+			mapParameters.put("certificate", webhook.getCertificate());
+			result = this.executeMethodMultipart(Methods.SET_WEBHOOK, BooleanResult.class, mapParameters).getResult();
+		}else{
+			result = this.executeMethod(Methods.SET_WEBHOOK, BooleanResult.class, webhook).getResult();
+		}
+		return result;
 
 	}
 
@@ -85,44 +95,85 @@ public abstract class TelegramBotService {
 	}
 
 	public Message sendPhoto(SendPhoto photo) throws FailResponseMethodException {
-
-		// TODO: See how send files
-		return null;
+		Message result = null;
+		if(photo.getFileToSend()!=null){
+			Map<String, Object> mapParameters = UtilsJson.getKeyValuePropertiesFromObject(photo);
+			mapParameters.put("photo", photo.getFileToSend());
+			result = this.executeMethodMultipart(Methods.SEND_PHOTO, MessageResult.class, mapParameters).getResult();
+		}else{
+			result = this.executeMethod(Methods.SEND_PHOTO, MessageResult.class, photo).getResult();
+		}
+		
+		return result;
 
 	}
 
 	public Message sendAudio(SendAudio audio) throws FailResponseMethodException {
-
-		// TODO: See how send files
-		return null;
+		Message result = null;
+		if(audio.getFileToSend()!=null){
+			Map<String, Object> mapParameters = UtilsJson.getKeyValuePropertiesFromObject(audio);
+			mapParameters.put("audio", audio.getFileToSend());
+			result = this.executeMethodMultipart(Methods.SEND_AUDIO, MessageResult.class, mapParameters).getResult();
+		}else{
+			result = this.executeMethod(Methods.SEND_AUDIO, MessageResult.class, audio).getResult();
+		}
+		return result;
 
 	}
 
 	public Message sendDocument(SendDocument document) throws FailResponseMethodException {
 
-		// TODO: See how send files
-		return null;
+		Message result = null;
+		if(document.getFileToSend()!=null){
+			Map<String, Object> mapParameters = UtilsJson.getKeyValuePropertiesFromObject(document);
+			mapParameters.put("document", document.getFileToSend());
+			result = this.executeMethodMultipart(Methods.SEND_DOCUMENT, MessageResult.class, mapParameters).getResult();
+		}else{
+			result = this.executeMethod(Methods.SEND_DOCUMENT, MessageResult.class, document).getResult();
+		}
+		return result;
 
 	}
 
 	public Message sendSticker(SendSticker sticker) throws FailResponseMethodException {
 
-		// TODO: See how send files
-		return null;
+		Message result = null;
+		if(sticker.getFileToSend()!=null){
+			Map<String, Object> mapParameters = UtilsJson.getKeyValuePropertiesFromObject(sticker);
+			mapParameters.put("sticker", sticker.getFileToSend());
+			result = this.executeMethodMultipart(Methods.SEND_STICKER, MessageResult.class, mapParameters).getResult();
+		}else{
+			result = this.executeMethod(Methods.SEND_STICKER, MessageResult.class, sticker).getResult();
+		}
+		return result;
 
 	}
 
 	public Message sendVideo(SendVideo video) throws FailResponseMethodException {
 
-		// TODO: See how send files
-		return null;
+		Message result = null;
+		if(video.getFileToSend()!=null){
+			Map<String, Object> mapParameters = UtilsJson.getKeyValuePropertiesFromObject(video);
+			mapParameters.put("video", video.getFileToSend());
+			result = this.executeMethodMultipart(Methods.SEND_VIDEO, MessageResult.class, mapParameters).getResult();
+		}else{
+			result = this.executeMethod(Methods.SEND_VIDEO, MessageResult.class, video).getResult();
+		}
+		return result;
 
 	}
 
 	public Message sendVoice(SendVoice voice) throws FailResponseMethodException {
 
-		// TODO: See how send files
-		return null;
+		Message result = null;
+		if(voice.getFileToSend()!=null){
+			Map<String, Object> mapParameters = UtilsJson.getKeyValuePropertiesFromObject(voice);
+			mapParameters.put("voice", voice.getFileToSend());
+			result = this.executeMethodMultipart(Methods.SEND_VOICE, MessageResult.class, mapParameters).getResult();
+		}else{
+			result = this.executeMethod(Methods.SEND_VOICE, MessageResult.class, voice).getResult();
+		}
+		return result;
 
 	}
 
@@ -225,26 +276,36 @@ public abstract class TelegramBotService {
 	private <T> T executeMethod(Methods method, Class<T> classType) throws FailResponseMethodException {
 		String response;
 		try {
-			response = RequestJson.requestGet(BASE_URL_API_TELEGRAM_BOT + method.getMethodName());
+			response = Requests.requestGet(BASE_URL_API_TELEGRAM_BOT + method.getMethodName());
 			T result = UtilsJson.convertJsonToObject(response, classType);
 			checkOkResponseRaiseException((MethodResult) result, method.getMethodName());
 			return result;
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new FailResponseMethodException(method.getMethodName());
+		} catch (IOException | FailConvertJsonException e) {
+			throw new FailResponseMethodException(method.getMethodName(), e.getCause());
 		}
 	}
 
 	private <T> T executeMethod(Methods method, Class<T> classType, Object params) throws FailResponseMethodException {
 		String response;
 		try {
-			response = RequestJson.requestPostJson(BASE_URL_API_TELEGRAM_BOT + method.getMethodName(), params);
+			response = Requests.requestPostJson(BASE_URL_API_TELEGRAM_BOT + method.getMethodName(), params);
 			T result = UtilsJson.convertJsonToObject(response, classType);
 			checkOkResponseRaiseException((MethodResult) result, method.getMethodName());
 			return result;
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new FailResponseMethodException(method.getMethodName());
+		} catch (IOException | FailConvertJsonException e) {
+			throw new FailResponseMethodException(method.getMethodName(), e.getCause());
+		}
+	}
+	
+	private <T> T executeMethodMultipart(Methods method, Class<T> classType, Map<String, Object> mapParameters) throws FailResponseMethodException {
+		String response;
+		try {
+			response = Requests.requestMultiPart(BASE_URL_API_TELEGRAM_BOT + method.getMethodName(), mapParameters);
+			T result = UtilsJson.convertJsonToObject(response, classType);
+			checkOkResponseRaiseException((MethodResult) result, method.getMethodName());
+			return result;
+		} catch (IOException | FailConvertJsonException e) {
+			throw new FailResponseMethodException(method.getMethodName(), e.getCause());
 		}
 	}
 

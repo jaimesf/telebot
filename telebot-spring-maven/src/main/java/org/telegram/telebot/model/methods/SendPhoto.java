@@ -1,9 +1,12 @@
 package org.telegram.telebot.model.methods;
 
+import java.io.File;
 import java.io.Serializable;
 
-import org.telegram.telebot.model.InputFile;
 import org.telegram.telebot.model.ReplyKeyboardMarkup;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SendPhoto implements Serializable {
 
@@ -14,8 +17,9 @@ public class SendPhoto implements Serializable {
 
 	// TODO: See how to do with String and Integer
 	private Integer chat_id;
-	// TODO: See how to do with InputFile and Integer
-	private InputFile photo;
+	// document file_id to resend
+	private String photo;
+	private File fileToSend;
 	private String caption;
 	private Boolean disable_notification = false;
 	private Integer reply_to_message_id;
@@ -29,11 +33,11 @@ public class SendPhoto implements Serializable {
 		this.chat_id = chat_id;
 	}
 
-	public InputFile getPhoto() {
+	public String getPhoto() {
 		return photo;
 	}
 
-	public void setPhoto(InputFile photo) {
+	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
 
@@ -67,6 +71,21 @@ public class SendPhoto implements Serializable {
 
 	public void setReply_markup(ReplyKeyboardMarkup reply_markup) {
 		this.reply_markup = reply_markup;
+	}
+	
+	public void setPhotoFromUrl(String url){
+		this.setPhoto("@" + url);
+	}
+
+	@JsonIgnore
+	@JsonProperty(value = "fileToSend")
+	public File getFileToSend() {
+		return fileToSend;
+	}
+
+	@JsonProperty(value = "fileToSend")
+	public void setFileToSend(File fileToSend) {
+		this.fileToSend = fileToSend;
 	}
 
 }
