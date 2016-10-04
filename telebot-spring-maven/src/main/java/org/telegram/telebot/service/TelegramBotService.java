@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.telegram.telebot.model.File;
+import org.telegram.telebot.model.GameHighScore;
 import org.telegram.telebot.model.Message;
 import org.telegram.telebot.model.Update;
 import org.telegram.telebot.model.User;
@@ -17,6 +18,7 @@ import org.telegram.telebot.model.methods.EditMessageReplyMarkup;
 import org.telegram.telebot.model.methods.EditMessageText;
 import org.telegram.telebot.model.methods.ForwardMessage;
 import org.telegram.telebot.model.methods.GetFile;
+import org.telegram.telebot.model.methods.GetGameHighScores;
 import org.telegram.telebot.model.methods.GetUpdates;
 import org.telegram.telebot.model.methods.GetUserProfilePhotos;
 import org.telegram.telebot.model.methods.Methods;
@@ -24,6 +26,7 @@ import org.telegram.telebot.model.methods.SendAudio;
 import org.telegram.telebot.model.methods.SendChatAction;
 import org.telegram.telebot.model.methods.SendContact;
 import org.telegram.telebot.model.methods.SendDocument;
+import org.telegram.telebot.model.methods.SendGame;
 import org.telegram.telebot.model.methods.SendLocation;
 import org.telegram.telebot.model.methods.SendMessage;
 import org.telegram.telebot.model.methods.SendPhoto;
@@ -31,9 +34,11 @@ import org.telegram.telebot.model.methods.SendSticker;
 import org.telegram.telebot.model.methods.SendVenue;
 import org.telegram.telebot.model.methods.SendVideo;
 import org.telegram.telebot.model.methods.SendVoice;
+import org.telegram.telebot.model.methods.SetGameScore;
 import org.telegram.telebot.model.methods.SetWebhook;
 import org.telegram.telebot.model.methods.results.BooleanResult;
 import org.telegram.telebot.model.methods.results.FileResult;
+import org.telegram.telebot.model.methods.results.GameHighScoreResult;
 import org.telegram.telebot.model.methods.results.MessageResult;
 import org.telegram.telebot.model.methods.results.MethodResult;
 import org.telegram.telebot.model.methods.results.UpdatesResult;
@@ -219,6 +224,21 @@ public abstract class TelegramBotService {
 		FileResult result = this.executeMethod(Methods.GET_FILE, FileResult.class, file);
 		return result.getResult();
 
+	}
+	
+	public Message sendGame(SendGame game) throws FailResponseMethodException{
+		MessageResult result = this.executeMethod(Methods.SEND_GAME, MessageResult.class, game);
+		return result.getResult();
+	}
+	
+	public Message setGameScore(SetGameScore gameScore) throws FailResponseMethodException{
+		MessageResult result = this.executeMethod(Methods.SET_GAME_SCORE, MessageResult.class, gameScore);
+		return result.getResult();
+	}
+	
+	public List<GameHighScore> getGameHighScores(GetGameHighScores setGameHighScore) throws FailResponseMethodException{
+		GameHighScoreResult result = this.executeMethod(Methods.GET_GAME_HIGH_SCORES, GameHighScoreResult.class, setGameHighScore);
+		return result.getResult();
 	}
 
 	public Boolean kickChatMember(ChatMember chatMember) throws FailResponseMethodException {

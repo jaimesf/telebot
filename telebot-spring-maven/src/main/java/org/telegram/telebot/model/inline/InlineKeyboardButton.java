@@ -2,6 +2,8 @@ package org.telegram.telebot.model.inline;
 
 import java.io.Serializable;
 
+import org.telegram.telebot.model.CallbackGame;
+
 public class InlineKeyboardButton implements Serializable{
 
 	/**
@@ -13,6 +15,8 @@ public class InlineKeyboardButton implements Serializable{
 	private String url;
 	private String callback_data;
 	private String switch_inline_query;
+	private String switch_inline_query_current_chat;
+	private CallbackGame callback_game;
 	
 	public String getText() {
 		return text;
@@ -37,6 +41,18 @@ public class InlineKeyboardButton implements Serializable{
 	}
 	public void setSwitch_inline_query(String switch_inline_query) {
 		this.switch_inline_query = switch_inline_query;
+	}
+	public String getSwitch_inline_query_current_chat() {
+		return switch_inline_query_current_chat;
+	}
+	public void setSwitch_inline_query_current_chat(String switch_inline_query_current_chat) {
+		this.switch_inline_query_current_chat = switch_inline_query_current_chat;
+	}
+	public CallbackGame getCallback_game() {
+		return callback_game;
+	}
+	public void setCallback_game(CallbackGame callback_game) {
+		this.callback_game = callback_game;
 	}
 
 }

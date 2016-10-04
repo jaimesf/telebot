@@ -9,18 +9,20 @@ public class CallbackQuery implements Serializable {
 	 */
 	private static final long serialVersionUID = 4565411560571987333L;
 
-	private Integer String;
+	private String id;
 	private User from;
 	private Message message;
 	private String inline_message_id;
+	private String chat_instance;
 	private String data;
+	private String game_short_name;
 
-	public Integer getString() {
-		return String;
+	public String getString() {
+		return id;
 	}
 
-	public void setString(Integer string) {
-		String = string;
+	public void setString(String id) {
+		this.id = id;
 	}
 
 	public User getFrom() {
@@ -53,6 +55,30 @@ public class CallbackQuery implements Serializable {
 
 	public void setData(String data) {
 		this.data = data;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getChat_instance() {
+		return chat_instance;
+	}
+
+	public void setChat_instance(String chat_instance) {
+		this.chat_instance = chat_instance;
+	}
+
+	public String getGame_short_name() {
+		return game_short_name;
+	}
+
+	public void setGame_short_name(String game_short_name) {
+		this.game_short_name = game_short_name;
 	}
 
 }
